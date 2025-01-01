@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puncha - Random Pun Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Puncha</h1>
+        <p class="pun">{{ pun }}</p>
+        <form action="/">
+            <button type="submit" class="puncha-button">Puncha Me!</button>
+        </form>
+        <br>
+        <!-- Add a button linking to the submit page -->
+        <a href="/submit" class="submit-button">Submit a Pun</a>
+    </div>
+</body>
+</html>

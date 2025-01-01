@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit a Pun</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Submit a Pun</h1>
+        <form method="POST" action="/submit">
+            <textarea name="pun" placeholder="Enter your pun here..." required></textarea>
+            <br>
+            <button type="submit">Submit Pun</button>
+        </form>
+        <a href="/">Back to Homepage</a>
+    </div>
+</body>
+</html>
