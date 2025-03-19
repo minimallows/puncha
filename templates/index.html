@@ -3,19 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Puncha - Random Pun Generator</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Puncha - Daily Pun</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: #fff;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            background: #2e2e2e;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            font-size: 24px;
+        }
+        p {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        .btn {
+            background: #ff9800;
+            color: #1e1e1e;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #e68900;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>Puncha</h1>
-        <p class="pun">{{ pun }}</p>
-        <form action="/">
-            <button type="submit" class="puncha-button">Puncha Me!</button>
-        </form>
-        <br>
-        <!-- Add a button linking to the submit page -->
-        <a href="/submit" class="submit-button">Submit a Pun</a>
+        <h1>Welcome to Puncha!</h1>
+        <p id="pun">Loading...</p>
+        <button class="btn" onclick="fetchPun()">Get a New Pun</button>
     </div>
+
+    <script>
+        async function fetchPun() {
+            const response = await fetch('/api/pun');
+            const data = await response.json();
+            document.getElementById('pun').innerText = data.pun;
+        }
+        fetchPun();
+    </script>
 </body>
 </html>

@@ -1,46 +1,34 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, jsonify
 import sqlite3
 import random
+import os
 
-app = Flask(__name__, template_folder="../templates", static_folder="../static")
+# Ensure Flask looks for templates in the right folder
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+TEMPLATE_DIR = os.path.join(BASE_DIR, '../templates')
 
-# Database initialization
-def init_db():
-    with sqlite3.connect("puns.db") as conn:
-        conn.execute("""
-            CREATE TABLE IF NOT EXISTS puns (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                pun TEXT NOT NULL
-            )
-        """)
+app = Flask(__name__, template_folder=TEMPLATE_DIR, static_folder="../static")
 
-# Function to load all puns
+# Function to fetch a pun from the database
 def load_puns():
-    with sqlite3.connect("puns.db") as conn:
-        return [row[0] for row in conn.execute("SELECT pun FROM puns")]
+    conn = sqlite3.connect("../puns.db")  # Adjust path if needed
+    cursor = conn.cursor()
+    cursor.execute("SELECT pun_text FROM puns")
+    puns = cursor.fetchall()
+    conn.close()
+    return [pun[0] for pun in puns]
 
-# Function to save a pun
-def save_pun(pun):
-    with sqlite3.connect("puns.db") as conn:
-        conn.execute("INSERT INTO puns (pun) VALUES (?)", (pun,))
-
-# Initialize database
-init_db()
-
+# Route to serve the HTML page
 @app.route('/')
 def homepage():
-    PUNS = load_puns()  # Fetch all puns from the database
-    pun = random.choice(PUNS) if PUNS else "No puns available yet! Submit one below!"
-    return render_template('index.html', pun=pun)
+    return render_template('index.html')
 
-@app.route('/submit', methods=['GET', 'POST'])
-def submit_pun():
-    if request.method == 'POST':
-        new_pun = request.form.get('pun')
-        if new_pun:
-            save_pun(new_pun)  # Save to the database
-        return redirect(url_for('homepage'))
-    return render_template('submit.html')
+# API route to fetch a random pun
+@app.route('/api/pun')
+def get_random_pun():
+    PUNS = load_puns()
+    pun = random.choice(PUNS) if PUNS else "No puns available!"
+    return jsonify({"pun": pun})
 
 if __name__ == '__main__':
     app.run(debug=True)
